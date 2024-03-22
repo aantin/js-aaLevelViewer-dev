@@ -1,0 +1,101 @@
+* {
+    box-sizing: border-box;
+    outlne: 0;
+}
+html, body {
+    margin: 0;
+    padding: 0;
+}
+html: {
+    height: 100vh;
+}
+body {
+    width: 100vw;
+    height: 100vh;
+    background-color: #fff;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    align-items: center;
+}
+a {
+    text-decoration: none;
+}
+a:hover,
+a:focus {
+    text-decoration: underline;
+}
+aside {
+    z-index: 2;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+}
+main.preload {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: transparent;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+body > aside:first-of-type {
+    flex-flow: row nowrap;
+}
+aside label {
+    display: block;
+}
+aside label span {
+    padding-left: 6px;
+    color: #666;
+}
+aside label input:checked + span {
+    color: #000;
+    font-weight: bold;
+}
+button.icon {
+    border: 1px solid transparent;
+}
+button.icon:focus {
+    border: 1px solid #48f;
+}
+button.icon:disabled {
+    color: var(--color-grey-darker);
+    background-color: var(--reset-bg-color);
+    border-color: transparent;
+    box-shadow: 0 0 0 transparent;
+}
+button.icon.flash {
+    --anim: .2s ease-out 0s reverse both anim-flash;
+    -webkit-animation: var(--anim);
+    animation: var(--anim);
+}
+@keyframes anim-flash {
+  from {border-color: transparent;}
+  to   {border-color: var(--color-blue);}
+}
+aside h1 {
+    margin: 0;
+    padding-top: 10px;
+    white-space: nowrap;
+    text-align: center;
+}
+body > aside:first-of-type h1 {
+    padding: 0 10px;
+    min-width: 240px;
+    text-align: center;
+}
+aside div {
+    white-space: nowrap;
+    text-align: center;
+}

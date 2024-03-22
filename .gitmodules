@@ -1,0 +1,6 @@
+[submodule "js/modules/js-aaJS-dev"]
+	path = js/modules/aaJS
+	url = git@github.com:aantin/js-aaJS-dev.git
+[submodule "js/modules/js-aaFramework-dev"]
+	path = js/modules/aaFramework
+	url = git@github.com:aantin/js-aaFramework-dev.git
