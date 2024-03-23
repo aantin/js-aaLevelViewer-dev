@@ -22,6 +22,9 @@ body {
     justify-content: space-between;
     align-items: center;
 }
+body.loading {
+    justify-content: center;
+}
 a {
     text-decoration: none;
 }
@@ -98,4 +101,25 @@ body > aside:first-of-type h1 {
 aside div {
     white-space: nowrap;
     text-align: center;
+}
+div#loading {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: flex-start;
+
+    font-size: 16px;
+    font-weight: bold;
+}
+div#loading div.progress {
+    display: inline-block;
+    height: 8px;
+    width: 0;
+    border-left: 0px solid var(--color-blue);
+    border-right: 240px solid #ddd;
+}
+div#loading div.progress:after {
+    display: inline-block;
+    white-space: nowrap;
+/*    content: attr(data-percent);*/
 }

@@ -115,6 +115,62 @@
             },
             methods: {
                 privates: {
+                    loadSources: function (options) {
+                        aa.arg.test(options, aa.verifyObject({
+                            resolve:    aa.isFunction,
+                            reject:     aa.isFunction,
+                        }), "'options'");
+                        const that = _(this);
+
+                        const loading = document.querySelector("#loading");
+                        if (!loading) return;
+
+                        const toLoad = {};
+                        that.series.forEach(serie => {
+                            serie.levels.forEach(level => {
+                                level.sources.forEach(src => {
+                                    toLoad[src] = false;
+                                });
+                            });
+                        });
+                        const sources = Object.keys(toLoad);
+                        const total = sources.length;
+                        if (total === 0) {
+                            loading.innerHTML = __("Source not found");
+                            return;
+                        }
+
+                        // Display a progress bar:
+                        const progress = $$("div.progress", {dataset: {percent: "0 %"}});
+                        loading.append(progress);
+
+                        setTimeout(() => {
+                            const updateProgress = percent => {
+                                requestAnimationFrame(() => {
+                                    progress.style.borderRightWidth = `${240 * (1 - percent)}px`;
+                                    progress.style.borderLeftWidth = `${240 * percent}px`;
+                                    progress.dataset.percent = `${Math.floor(100 * percent)} %`;
+
+                                    if (percent === 1) {
+                                        requestAnimationFrame(() => {
+                                            options.resolve?.();
+                                        });
+                                    }
+                                });
+                            };
+                            sources.forEach(src => {
+                                const img = new Image();
+                                img.addEventListener("load", e => {
+                                    toLoad[src] = true;
+                                    const count = Object.keys(toLoad).filter(key => toLoad[key] === true).length;
+                                    const percent = count / total;
+                                    updateProgress(percent);
+                                });
+                                img.src = src;
+                            });
+
+                        }, 500);
+                    },
                 },
                 publics: {
                     load:   function (data={}) {
@@ -373,44 +429,14 @@
                             },
                         };
 
-                        let count = that.series.reduce((acc, serie) => {
-                            acc += currentSeries.levels.reduce((acc, level) => {
-                                acc += level.sources.length;
-                                return acc;
-                            }, 0);
-                            return acc;
-                        }, 0);
-                        if (count === 0) {
-                            document.querySelector("#loading").innerHTML = __("Source not found");
-                            return;
-                        }
+                        that.loadSources({
+                            resolve: () => {
+                                loading.removeNode();
+                                actions.start();
+                                body.classList.remove("loading");
+                            }
+                        });
 
-                        // Progress bar:
-                        const progress = aa.gui.Progress.getBy({title: "Loading images..."});
-                        progress.add("images");
-
-                        setTimeout(() => {
-                            const loaded = {};
-                            const total = count;
-                            that.series.forEach(serie => {
-                                serie.levels.forEach(level => {
-                                    level.sources.forEach(src => {
-                                        loaded[src] = false;
-                                        const img = new Image();
-                                        img.addEventListener("load", e => {
-                                            loaded[src] = true;
-                                            count--;
-                                            progress.move("images", (total - count) / total);
-                                            if (count === 0 || Object.keys(loaded).every(key => loaded[key] === true)) {
-                                                progress.complete("images");
-                                                actions.start();
-                                            }
-                                        });
-                                        img.src = src;
-                                    });
-                                });
-                            });
-                        }, 500);
                         return this;
                     },
                 },
